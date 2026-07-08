@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How You Work With AI: a pre-session reflection</title>
+<style>
+  :root{
+    --paper:#ffffff; --surface:#ffffff; --ink:#000000; --muted:#222222;
+    --line:#002060; --line2:#002060;
+    --slate:#002060;      /* primary: navy blue */
+    --slate2:#1a3a80;
+    --slate-bg:#e9eefb;
+    --brass:#000000;      /* accent: reserved for the mark YOU place */
+    --brass-bg:#dfe6f4;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:750px;margin:0 auto;padding:0 20px 140px}
+
+  /* ---------- header ---------- */
+  header{background:#ffffff;color:var(--ink);border-bottom:3px solid var(--slate)}
+  .head-inner{max-width:750px;margin:0 auto;padding:40px 20px 32px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--slate);margin:0 0 16px;display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--slate);display:inline-block}
+  h1{font-family:var(--serif);font-weight:600;font-size:41px;line-height:1.04;margin:0 0 14px;letter-spacing:-.015em;color:var(--slate)}
+  .lede{color:var(--ink);font-size:17px;max-width:58ch;margin:0 0 20px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:12px;
+    color:var(--ink);letter-spacing:.02em;padding-top:14px;border-top:1px solid var(--slate)}
+  .meta b{color:var(--slate);font-weight:600}
+
+  /* ---------- framing note (caveat FIRST) ---------- */
+  .framing{background:#fff4e6;border:1px solid var(--line);border-left:3px solid var(--slate);
+    border-radius:10px;padding:18px 20px;margin:26px 0 4px}
+  .framing h2{font-family:var(--sans);font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--slate);margin:0 0 9px;font-weight:700}
+  .framing p{margin:0;font-size:14.5px;color:var(--ink);line-height:1.6}
+  .framing p + p{margin-top:9px}
+  .framing em{font-style:italic;color:var(--ink)}
+  .framing ul{margin:0;padding-left:20px}
+  .framing li{font-size:14.5px;color:var(--ink);line-height:1.6;margin:7px 0}
+  .framing li::marker{color:var(--slate)}
+
+  /* ---------- parts & items ---------- */
+  .part{margin:44px 0 6px}
+  .part-num{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--slate2)}
+  .part h2{font-family:var(--serif);font-weight:600;font-size:26px;margin:5px 0 6px;color:var(--slate)}
+  .part p.intro{margin:0 0 6px;color:var(--muted);font-size:14.5px;max-width:60ch}
+  .scalekey{font-family:var(--mono);font-size:11.5px;color:var(--slate);background:var(--slate-bg);
+    display:inline-block;padding:5px 12px;border-radius:999px;margin-top:12px;letter-spacing:.02em}
+  .kbdtip{font-family:var(--sans);font-size:12.5px;color:var(--muted);margin-top:10px}
+  .kbdtip b{color:var(--slate)}
+  .scalenote{display:inline-block;margin-top:10px;font-family:var(--sans);font-size:13px;font-weight:700;
+    color:var(--slate);background:var(--slate-bg);border:1px solid var(--slate);border-radius:8px;padding:7px 12px}
+  .factor{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.03em;color:var(--slate);
+    margin:30px 0 2px;text-transform:uppercase;display:flex;align-items:baseline;gap:8px}
+  .factor span{font-weight:400;text-transform:none;color:var(--muted);letter-spacing:0;font-size:13px}
+
+  .item{background:var(--surface);border:1px solid var(--line);border-radius:11px;
+    padding:15px 17px;margin:11px 0;transition:border-color .15s,box-shadow .15s}
+  .item.miss{border-color:var(--brass);box-shadow:0 0 0 3px var(--brass-bg)}
+  .item .q{display:flex;gap:12px;margin-bottom:12px}
+  .item .n{font-family:var(--mono);font-size:12.5px;color:var(--slate2);font-weight:600;flex:0 0 auto;padding-top:2px;min-width:22px}
+  .item .t{font-size:15.5px;line-height:1.42;font-weight:700}
+  fieldset{border:0;margin:0;padding:0}
+  legend{padding:0;width:100%}
+  .opts{display:flex;gap:7px}
+  .opts label{flex:1;position:relative;cursor:pointer}
+  .opts input{position:absolute;opacity:0;width:1px;height:1px}
+  .opts .box{display:flex;align-items:center;justify-content:center;height:40px;border:1px solid var(--line2);
+    border-radius:8px;font-family:var(--mono);font-size:14px;color:var(--muted);background:#ffffff;
+    transition:all .12s;font-weight:500}
+  .opts label:hover .box{border-color:var(--slate2);color:var(--slate)}
+  .opts input:checked + .box{background:var(--slate);border-color:var(--slate);color:#fff;font-weight:600}
+  .opts input:focus-visible + .box{outline:2px solid var(--brass);outline-offset:2px}
+  .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:8px;font-style:italic}
+  .opts-usage{display:flex;gap:8px;flex-wrap:wrap}
+  .opts-usage label{flex:1 1 auto}
+  .opts-usage .box{height:auto;padding:9px 13px;font-family:var(--sans);font-size:13.5px}
+
+  /* ---------- sticky footer ---------- */
+  .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);
+    backdrop-filter:saturate(180%) blur(8px);border-top:1px solid var(--line2);z-index:20}
+  .bar-inner{max-width:750px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+  .prog{flex:1}
+  .prog .txt{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:5px}
+  .prog .txt b{color:var(--slate);font-weight:600}
+  .ptrack{height:5px;background:#dfe6f4;border-radius:99px;overflow:hidden}
+  .ptrack i{display:block;height:100%;width:0;background:var(--slate);border-radius:99px;transition:width .3s}
+  .btn-go{font-family:var(--sans);font-weight:600;font-size:14.5px;color:#fff;background:var(--slate);
+    border:0;border-radius:9px;padding:11px 20px;cursor:pointer;white-space:nowrap;transition:background .15s}
+  .btn-go:hover{background:var(--slate2)}
+  .btn-go:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .btn-skip{font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--slate);background:#ffffff;
+    border:1px solid var(--line2);border-radius:9px;padding:10px 13px;cursor:pointer;white-space:nowrap}
+  .btn-skip:hover{background:var(--slate-bg)}
+  .btn-skip:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  #milestone{color:var(--slate);font-weight:600}
+  .hint{display:none;font-family:var(--sans);font-size:12.5px;color:var(--slate);font-weight:700;margin-top:8px}
+  .hint.show{display:block}
+
+  /* ---------- results ---------- */
+  #results{display:none;margin-top:34px}
+  #results.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .r-caveat{background:#ffffff;color:var(--ink);border:1px solid var(--slate);border-left:4px solid var(--slate);border-radius:11px;padding:17px 20px;margin-bottom:22px}
+  .r-caveat b{color:var(--slate)}
+  .r-caveat p{margin:0;font-size:14px;line-height:1.6}
+  .r-caveat p + p{margin-top:8px}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:22px 22px;margin:16px 0}
+  .card h3{font-family:var(--serif);font-size:21px;color:var(--slate);margin:0 0 4px;font-weight:600}
+  .card .sub{font-size:13.5px;color:var(--muted);margin:0 0 18px;max-width:58ch}
+
+  /* measurement rows */
+  .metric{margin:16px 0}
+  .metric.head{margin-top:22px}
+  .metric .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+  .metric .nm{font-size:14.5px;font-weight:600;color:var(--ink)}
+  .metric .nm small{font-weight:400;color:var(--muted);font-size:12.5px}
+  .metric .rt{display:flex;align-items:center;gap:10px}
+  .chip{font-family:var(--sans);font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;letter-spacing:.01em}
+  .chip.low{background:#ffffff;color:#000000;border:1px solid #000000}
+  .chip.mid{background:#ffffff;color:var(--slate);border:1px solid var(--slate)}
+  .chip.high{background:var(--slate);color:#ffffff;border:1px solid var(--slate)}
+  .num{font-family:var(--mono);font-size:12px;color:var(--muted);min-width:52px;text-align:right}
+  .mtrack{position:relative;height:8px;background:linear-gradient(90deg,#eef1f8,#dfe6f4);border-radius:99px}
+  .mtrack .mk{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--slate);
+    border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transform:translate(-50%,-50%);left:0;transition:left .6s cubic-bezier(.2,.7,.2,1)}
+  .mtrack.sub{height:6px}
+  .mtrack.sub .mk{width:11px;height:11px;background:var(--slate2)}
+  .mscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px;color:var(--ink);margin-top:5px}
+  .divide{height:1px;background:var(--line);margin:20px 0}
+
+  /* two habits explainer */
+  .habits{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .habit{border:1px solid var(--line);border-radius:10px;padding:15px 16px;background:#ffffff}
+  .habit .h{font-weight:700;font-size:14px;color:var(--slate);margin-bottom:5px}
+  .habit p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+  .modes{margin-top:15px;font-size:13.5px;color:var(--ink);line-height:1.6}
+  .modes b{color:var(--ink)}
+
+  /* calibration field */
+  .fieldwrap{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start}
+  .field-side .inputs{border:1px solid var(--line);border-radius:10px;padding:14px 15px;background:#ffffff;margin-bottom:14px}
+  .field-side .inputs h4{margin:0 0 10px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);font-weight:700}
+  .inrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;margin:7px 0}
+  .inrow span{color:var(--muted)}
+  .inrow b{color:var(--ink);font-weight:600}
+  .inputs .feeds{font-size:11.5px;color:var(--muted);font-style:italic;margin:10px 0 0;line-height:1.45}
+  .watch{border:1.5px solid var(--slate);background:#d8e9f8;border-radius:10px;padding:14px 15px;margin-top:14px}
+  .watch .wh{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);font-weight:700;margin-bottom:6px}
+  .watch p{margin:0;font-size:13px;color:var(--ink);line-height:1.55}
+  .fieldsvg{width:100%;height:auto;display:block;touch-action:none;cursor:crosshair;
+    border:1px solid var(--line2);border-radius:12px;background:var(--surface)}
+  .fieldsvg:focus-within{outline:3px solid var(--slate2);outline-offset:3px}
+  #hitarea:focus{outline:none}
+  .fieldnote{font-size:13px;color:var(--ink);margin:10px 2px 0;line-height:1.5}
+  .fieldnote b{color:var(--slate)}
+
+  .endbtns{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .btn-ghost{font-family:var(--sans);font-weight:600;font-size:14px;color:var(--slate);background:transparent;
+    border:1px solid var(--line2);border-radius:9px;padding:11px 18px;cursor:pointer}
+  .btn-ghost:hover{border-color:var(--slate);background:#ffffff}
+
+  @media (max-width:680px){
+    h1{font-size:33px}
+    .habits{grid-template-columns:1fr}
+    .fieldwrap{grid-template-columns:1fr}
+    .field-side{order:2}
+    .item{padding:13px 12px}
+    .opts{gap:4px}
+    .opts .box{height:44px;font-size:13px;border-radius:7px}
+    .opts-usage{gap:8px}
+    .opts-usage .box{height:auto;min-height:44px;font-size:13px}
+    .kbdtip{display:none}
+    .btn-skip{font-size:12px;padding:9px 10px}
+  }
+  @media (max-width:380px){
+    .opts{gap:3px}
+    .opts .box{font-size:12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+  @media print{
+    .bar,.endbtns{display:none}
+    header{background:#fff!important;color:var(--ink)!important;border-bottom:2px solid var(--slate)}
+    .eyebrow,.lede,.meta{color:var(--slate)!important}
+    .r-caveat{background:#fff!important;color:var(--ink)!important;border:1px solid var(--line)}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <p class="eyebrow">Before the session · Private</p>
+    <h1>How you work with AI</h1>
+    <p class="lede">A short reflection ahead of our meeting on July 13, 2026. This is not a test, and not a score shared with anyone. It is a self-assessment that uses two established scales to help you notice your views on and comfort with AI.</p>
+    <div class="meta"><span><b>~10 mins</b></span><span><b>43</b> statements</span><span>Private, <b>nothing is saved or sent</b></span></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="framing">
+    <h2>Please Read This First</h2>
+    <ul>
+      <li>There are no right answers, and nothing here is scored against anyone else. You'll see where <em>you</em> lean on two dimensions, described in ranges rather than a single verdict.</li>
+      <li>The questions ask how well you <em>think</em> you understand AI, and a good part of today is testing how that self-read holds up in practice.</li>
+      <li>Nothing is stored or sent; your answers stay in this browser tab. You can take a screenshot of the result and then close the browser.</li>
+    </ul>
+  </div>
+
+  <form id="survey">
+
+    <div class="part">
+      <div class="part-num">Part 1</div>
+      <h2>Your attitude toward AI</h2>
+      <p class="intro">How much do you agree with each statement? “AI” here means technology that can sense, learn, and act in human-like ways, whether in software, online tools, or devices.</p>
+      <div class="scalekey">1 = strongly disagree&nbsp;&nbsp;·&nbsp;&nbsp;5 = strongly agree</div>
+      <div class="kbdtip">Keyboard tip: press <b>1</b> to <b>5</b> (or <b>1</b> to <b>7</b> in Part 2) to rate a statement and jump to the next.</div>
+    </div>
+    <div id="attari"></div>
+
+    <div class="part">
+      <div class="part-num">Part 2</div>
+      <h2>Working and judging with AI</h2>
+      <p class="intro">These are about your own competence with AI, understanding how it works, judging it critically, and putting it to use. Rate how true each is for you.</p>
+      <div class="scalekey">1 = strongly disagree&nbsp;&nbsp;·&nbsp;&nbsp;7 = strongly agree</div>
+      <div class="scalenote">Note: the scale changes here. This part runs 1 to 7 (Part 1 used 1 to 5).</div>
+    </div>
+    <div id="snail"></div>
+
+    <div class="part">
+      <div class="part-num">Part 3</div>
+      <h2>One quick question</h2>
+      <p class="intro">This sets context, and it's one input you'll weigh when you place yourself at the end.</p>
+      <div class="item" style="margin-top:14px">
+        <fieldset><legend><div class="q"><span class="t">How often do you currently use AI tools (e.g., Copilot, ChatGPT) in your work?</span></div></legend>
+        <div class="opts opts-usage"></div></fieldset>
+      </div>
+    </div>
+
+    <div id="hint" class="hint">A few are still blank. They are highlighted above.</div>
+  </form>
+
+  <div id="results" aria-live="polite"></div>
+
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <div class="prog">
+      <div class="txt"><b id="answered">0</b> of 43 answered<span id="milestone"></span></div>
+      <div class="ptrack"><i id="pbar"></i></div>
+    </div>
+    <button type="button" class="btn-skip" id="jumpBtn">Next unanswered ↓</button>
+    <button type="button" class="btn-go" id="scoreBtn">See my reflection</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- validated instruments ---- */
+  var ATTARI = [
+    ["AI will make this world a better place.", false],
+    ["I have strong negative emotions about AI.", true],
+    ["I want to use technologies that rely on AI.", false],
+    ["AI has more disadvantages than advantages.", true],
+    ["I look forward to future AI developments.", false],
+    ["AI offers solutions to many world problems.", false],
+    ["I prefer technologies that do not feature AI.", true],
+    ["I am afraid of AI.", true],
+    ["I would rather choose a technology with AI than one without it.", false],
+    ["AI creates problems rather than solving them.", true],
+    ["When I think about AI, I have mostly positive feelings.", false],
+    ["I would rather avoid technologies that are based on AI.", true]
+  ];
+  var TU = [
+    "I can explain the difference between general (or strong) and narrow (or weak) artificial intelligence.",
+    "I can explain how artificial intelligence applications make decisions.",
+    "I can explain how machine learning works at a general level.",
+    "I can describe how machine learning models are trained, validated, and tested.",
+    "I can explain the difference between 'supervised learning' and 'unsupervised learning'.",
+    "I can explain how 'reinforcement learning' works at a basic level.",
+    "I can explain how deep learning relates to machine learning.",
+    "I can explain what the term 'artificial neural network' means.",
+    "I can describe how some artificial intelligence systems can act in and react to their environment.",
+    "I can explain how sensors are used by computers to collect data that can be used for AI purposes.",
+    "I can explain why artificial intelligence has recently become increasingly important.",
+    "I can explain how rule-based systems differ from machine-learning systems.",
+    "I can explain how decision-tree systems work.",
+    "I can explain what the term 'black box' means in relation to artificial intelligence systems."
+  ];
+  var CA = [
+    "I can name weaknesses of artificial intelligence.",
+    "I can describe risks that may arise when using artificial intelligence systems.",
+    "I can describe advantages that can come from using artificial intelligence systems.",
+    "I can describe the potential impact of artificial intelligence on the future.",
+    "I can critically evaluate the implications of artificial intelligence applications in at least one subject area.",
+    "I can explain why data plays an important role in the development and application of artificial intelligence.",
+    "I can describe why humans play an important role in the development of artificial intelligence systems.",
+    "I can identify ethical issues surrounding artificial intelligence.",
+    "I can describe how biases arise in artificial intelligence systems.",
+    "I can critically reflect on the potential impact of artificial intelligence on individuals and society."
+  ];
+  var PA = [
+    "I can tell if the technologies I use are supported by artificial intelligence.",
+    "I can name examples of technical applications that are supported by artificial intelligence.",
+    "I can assess if a problem in my field can and should be solved with artificial intelligence methods.",
+    "I can distinguish artificial intelligence applications that already exist from applications that are still in the future.",
+    "I can evaluate whether media representations of AI (e.g., in movies or video games) go beyond the current capabilities of AI technologies.",
+    "I can name applications in which AI-assisted natural language processing/understanding is used.",
+    "I can name applications in which AI-assisted computer vision is used."
+  ];
+  var USAGE = ["Never","Rarely (monthly or less)","Sometimes (weekly)","Often (most days)","Constantly (several times a day)"];
+
+  /* behavioural guidance keyed to a self-placed region: no identity labels, no praise */
+  var WATCH = {
+    tr:"Reaching readily and checking carefully: the pairing good AI use depends on. The risk to watch: the checking habit is easiest to drop exactly when the output looks most polished, so keep it deliberate on high-stakes work.",
+    tl:"Careful and critical, with lighter reach. The risk to watch: under-use, with real time savings left on the table. Pick one low-stakes, high-frequency task and let AI take a first pass; you already have the judgement to catch what it gets wrong.",
+    br:"Quick to adopt, with appraisal still catching up. The risk to watch: over-trust. Make “show me the source” and a check of names, figures and citations a standing reflex; it is the habit today's session focuses on most.",
+    bl:"Not yet leaned in: a reasonable place to begin, and the session is built for it. The risk to watch: staying on the sidelines. Aim for one concrete win: one recurring task, tried once, result checked."
+  };
+
+  var form = document.getElementById("survey");
+
+  function itemHTML(idx, num, text, max, group){
+    var opts = "";
+    for(var v=1; v<=max; v++){
+      opts += '<label><input type="radio" name="'+group+idx+'" value="'+v+'" '+
+              'aria-label="'+text.replace(/"/g,"&quot;")+' ('+v+' of '+max+')"><span class="box">'+v+'</span></label>';
+    }
+    return '<div class="item" id="'+group+idx+'_item">'+
+      '<fieldset><legend><div class="q"><span class="n">'+num+'</span><span class="t">'+text+'</span></div></legend>'+
+      '<div class="opts" role="radiogroup">'+opts+'</div>'+
+      '<div class="ends"><span>strongly disagree</span><span>strongly agree</span></div>'+
+      '</fieldset></div>';
+  }
+
+  var a = "";
+  ATTARI.forEach(function(it,i){ a += itemHTML(i,(i+1),it[0],5,"a"); });
+  document.getElementById("attari").innerHTML = a;
+
+  var s = "", n = 13;
+  function block(title, sub, arr, startIdx){
+    s += '<div class="factor">'+title+' <span>'+sub+'</span></div>';
+    arr.forEach(function(t,i){ s += itemHTML(startIdx+i, n, t, 7, "s"); n++; });
+  }
+  block("Technical understanding","· how AI works", TU, 0);
+  block("Critical appraisal","· judging AI, its risks and limits", CA, 14);
+  block("Practical application","· spotting and using AI", PA, 24);
+  document.getElementById("snail").innerHTML = s;
+
+  var u = "";
+  USAGE.forEach(function(t,i){
+    u += '<label><input type="radio" name="usage" value="'+i+'" aria-label="'+t+'"><span class="box">'+t+'</span></label>';
+  });
+  document.querySelector(".opts-usage").innerHTML = u;
+
+  /* ---- progress ---- */
+  var TOTAL = 43;
+  function answeredCount(){
+    var c = 0;
+    for(var i=0;i<12;i++) if(form.querySelector('input[name="a'+i+'"]:checked')) c++;
+    for(var j=0;j<31;j++) if(form.querySelector('input[name="s'+j+'"]:checked')) c++;
+    return c;
+  }
+  function updateProgress(){
+    var c = answeredCount();
+    document.getElementById("answered").textContent = c;
+    document.getElementById("pbar").style.width = (c/TOTAL*100)+"%";
+    var ms = "";
+    if(c === TOTAL) ms = " · all set";
+    else if(c >= 33) ms = " · nearly there";
+    else if(c >= 22) ms = " · over halfway";
+    else if(c >= 11) ms = " · good start";
+    document.getElementById("milestone").textContent = ms;
+    document.getElementById("jumpBtn").style.display = (c >= TOTAL) ? "none" : "";
+  }
+  form.addEventListener("change", function(e){
+    updateProgress();
+    var item = e.target.closest(".item");
+    if(item) item.classList.remove("miss");
+  });
+
+  /* ---- keyboard answering and jump-to-next-unanswered ---- */
+  var GROUPS = [];
+  for(var g1=0; g1<12; g1++) GROUPS.push("a"+g1);
+  for(var g2=0; g2<31; g2++) GROUPS.push("s"+g2);
+  GROUPS.push("usage");
+  function firstUnanswered(){
+    for(var k=0; k<GROUPS.length; k++){
+      if(!form.querySelector('input[name="'+GROUPS[k]+'"]:checked')) return GROUPS[k];
+    }
+    return null;
+  }
+  function goTo(group){
+    var el = form.querySelector('input[name="'+group+'"]');
+    var item = el ? el.closest(".item") : null;
+    if(!item) return;
+    item.scrollIntoView({behavior:"auto", block:"center"});
+    var r = item.querySelector("input");
+    if(r) r.focus({preventScroll:true});
+  }
+  document.getElementById("jumpBtn").addEventListener("click", function(){
+    var g = firstUnanswered();
+    if(g) goTo(g);
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    if(!/^[1-9]$/.test(e.key)) return;
+    var active = document.activeElement;
+    var inForm = active && form.contains(active);
+    if(document.getElementById("results").classList.contains("show") && !inForm) return;
+    var group = (inForm && active.name) ? active.name : firstUnanswered();
+    if(!group) return;
+    var radios = form.querySelectorAll('input[name="'+group+'"]');
+    var idx = parseInt(e.key, 10) - 1;
+    if(idx >= radios.length) return;
+    e.preventDefault();
+    radios[idx].click();
+    var next = firstUnanswered();
+    if(next) goTo(next);
+    else document.getElementById("scoreBtn").focus();
+  });
+
+  /* ---- scoring: measurement only, no verdict ---- */
+  function val(name){ var el = form.querySelector('input[name="'+name+'"]:checked'); return el?+el.value:null; }
+  function mean(arr){ var t=0; for(var i=0;i<arr.length;i++) t+=arr[i]; return t/arr.length; }
+  function pct(v, max){ return (v-1)/(max-1)*100; }          // 1..max -> 0..100
+  function f1(x){ return x.toFixed(1); }
+
+  function score(){
+    var aRaw=[], missing=[];
+    for(var i=0;i<12;i++){ var v=val("a"+i); if(v===null){missing.push("a"+i+"_item");} aRaw.push(v); }
+    var sRaw=[];
+    for(var j=0;j<31;j++){ var w=val("s"+j); if(w===null){missing.push("s"+j+"_item");} sRaw.push(w); }
+
+    if(missing.length){
+      form.querySelectorAll(".item.miss").forEach(function(el){el.classList.remove("miss");});
+      missing.forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.add("miss"); });
+      var hint = document.getElementById("hint");
+      hint.textContent = missing.length + (missing.length === 1 ? " statement is" : " statements are") + " still blank. They are highlighted above.";
+      hint.classList.add("show");
+      var first=document.getElementById(missing[0]);
+      if(first) first.scrollIntoView({block:"center"});
+      return;
+    }
+    document.getElementById("hint").classList.remove("show");
+
+    /* ATTARI-12: reverse items 2,4,7,8,10,12 (idx 1,3,6,7,9,11) */
+    var posIdx=[0,2,4,5,8,10], negIdx=[1,3,6,7,9,11];
+    var attAdj = aRaw.map(function(v,i){ return ATTARI[i][1] ? (6-v) : v; });
+    var attitude = mean(attAdj);
+    var optimism = mean(posIdx.map(function(i){return aRaw[i];}));      // higher = more positive
+    var reservations = mean(negIdx.map(function(i){return aRaw[i];}));  // higher = more concern
+
+    var tu = mean(sRaw.slice(0,14));
+    var ca = mean(sRaw.slice(14,24));
+    var pa = mean(sRaw.slice(24,31));
+    var overall = mean(sRaw);
+
+    var usage = val("usage");   // 0..4 or null; surfaced, never folded into a verdict
+
+    render({attitude:attitude,optimism:optimism,reservations:reservations,
+      overall:overall,tu:tu,ca:ca,pa:pa,usage:usage});
+  }
+
+  /* ---- render ---- */
+  function bandOf(p){ return p<38 ? "low" : (p<=62 ? "mid" : "high"); }
+  var WORDS = {
+    attitude:{low:"Leans wary",mid:"Mixed",high:"Leans positive"},
+    optimism:{low:"Lower",mid:"Moderate",high:"Higher"},
+    reservations:{low:"Fewer",mid:"Some",high:"More"},
+    lit:{low:"Emerging",mid:"Developing",high:"Confident"}
+  };
+
+  function metric(name, sub, v, max, wordset, head){
+    var p = pct(v,max), b = bandOf(p);
+    return '<div class="metric'+(head?" head":"")+'">'+
+      '<div class="top"><span class="nm">'+name+(sub?' <small>'+sub+'</small>':'')+'</span>'+
+      '<span class="rt"><span class="chip '+b+'">'+wordset[b]+'</span>'+
+      '<span class="num">'+f1(v)+' / '+max+'</span></span></div>'+
+      '<div class="mtrack'+(head?'':' sub')+'"><span class="mk" data-l="'+p+'"></span></div>'+
+      (head?'<div class="mscale"><span>1</span><span>'+max+'</span></div>':'')+
+    '</div>';
+  }
+
+  function render(r){
+    var litP = pct(r.overall,7), litB = bandOf(litP);
+    var caB = bandOf(pct(r.ca,7)), paB = bandOf(pct(r.pa,7)), optB = bandOf(pct(r.optimism,5));
+    var usageTxt = (r.usage===null) ? "not answered" : USAGE[r.usage];
+
+    var html = ""
+    + '<div class="r-caveat"><p><b>How to read this.</b> Both readings come from validated scales: the ATTARI-12 (attitudes) and the SNAIL (AI literacy). They describe where you lean today, in ranges, not a fixed type. Because this is one person, everything sits against the scale midpoint, so treat it as a prompt for reflection, not a verdict.</p>'
+    + '<p>And remember it measures <b>self-rated</b> understanding.</p></div>'
+
+    /* --- measurement --- */
+    + '<div class="card">'
+    +   '<h3>What you told us</h3>'
+    +   '<p class="sub">Your own ratings, summarized. Nothing here places you in a box. It\'s the raw material for the reflection below.</p>'
+    +   '<div class="metric-group">'
+    +     metric("Attitude toward AI","ATTARI-12", r.attitude, 5, WORDS.attitude, true)
+    +     metric("· Optimism &amp; acceptance", "", r.optimism, 5, WORDS.optimism)
+    +     metric("· Reservations &amp; concern", "higher = more concern", r.reservations, 5, WORDS.reservations)
+    +   '</div>'
+    +   '<div class="divide"></div>'
+    +   '<div class="metric-group">'
+    +     metric("AI literacy","SNAIL", r.overall, 7, WORDS.lit, true)
+    +     metric("· Technical understanding", "how AI works", r.tu, 7, WORDS.lit)
+    +     metric("· Critical appraisal", "risks &amp; limits", r.ca, 7, WORDS.lit)
+    +     metric("· Practical application", "spotting &amp; using AI", r.pa, 7, WORDS.lit)
+    +   '</div>'
+    +   '<div class="divide"></div>'
+    +   '<div class="metric" style="margin:6px 0 0"><div class="top"><span class="nm">Current AI use <small>context only</small></span>'
+    +     '<span class="chip mid">'+usageTxt+'</span></div></div>'
+    + '</div>'
+
+    /* --- two habits --- */
+    + '<div class="card">'
+    +   '<h3>The two habits that matter</h3>'
+    +   '<p class="sub">Good AI use rests on two habits working together. Most misuse is one running ahead of the other.</p>'
+    +   '<div class="habits">'
+    +     '<div class="habit"><div class="h">Reaching for it</div><p>How readily you put AI to real work: drafting, summarising, first-pass research. Momentum.</p></div>'
+    +     '<div class="habit"><div class="h">Checking it</div><p>How rigorously you test what it returns: its limits, its risks, and whether the names, figures and citations are real. Judgement.</p></div>'
+    +   '</div>'
+    +   '<div class="modes"><b>Two ways it goes wrong.</b> Reaching without checking is <b>over-trust</b>: fluent output taken on faith, the failure that matters most in legal and compliance work. Checking without reaching is <b>under-use</b>: sound judgement leaving real time savings on the table.</div>'
+    + '</div>'
+
+    /* --- self-placement --- */
+    + '<div class="card">'
+    +   '<h3>Where do you sit?</h3>'
+    +   '<p class="sub">There is no computed answer here; this one is yours to set. Weigh your ratings, then place your own mark. You\'ll come back to this together in the session.</p>'
+    +   '<div class="fieldwrap">'
+    +     '<div>'+ fieldSVG() +
+             '<p class="fieldnote"><b>Tap, drag, or focus the field and use the arrow keys</b> to set your mark. Across = how readily you reach; up = how carefully you check.</p>'
+    +       '<div class="watch"><div class="wh">The risk to watch there</div><p id="watchtext" aria-live="polite">Set your mark to see the habit worth minding for that spot.</p></div>'
+    +     '</div>'
+    +     '<div class="field-side">'
+    +       '<div class="inputs"><h4>Your inputs to weigh</h4>'
+    +         '<div class="inrow"><span>Optimism</span><b>'+WORDS.optimism[optB]+'</b></div>'
+    +         '<div class="inrow"><span>Practical application</span><b>'+WORDS.lit[paB]+'</b></div>'
+    +         '<div class="inrow"><span>Current use</span><b>'+usageTxt.split(" (")[0]+'</b></div>'
+    +         '<p class="feeds">↑ these three feed <em>reaching</em>.</p>'
+    +         '<div class="inrow" style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px"><span>Critical-appraisal literacy</span><b>'+WORDS.lit[caB]+'</b></div>'
+    +         '<p class="feeds">↑ this feeds <em>checking</em>.</p>'
+    +       '</div>'
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="endbtns">'
+    +     '<button type="button" class="btn-ghost" id="retake">Start over</button>'
+    +   '</div>'
+    + '</div>';
+
+    var box = document.getElementById("results");
+    box.innerHTML = html;
+    box.classList.add("show");
+
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      box.querySelectorAll(".mtrack .mk").forEach(function(el){ el.style.left = el.dataset.l+"%"; });
+    });});
+
+    initField();
+    document.getElementById("retake").addEventListener("click", retake);
+    box.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  /* blank calibration field: axes only, faint behavioural corner cues, no identity labels */
+  function fieldSVG(){
+    var X0=64,X1=380,Y0=16,Y1=292, mx=(X0+X1)/2, my=(Y0+Y1)/2;
+    function corner(x,y,anchor,l1,l2){ return '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="'+
+      'var(--sans)" font-size="11" fill="#000000">'+l1+'<tspan x="'+x+'" dy="14">'+l2+'</tspan></text>'; }
+    function tick(x,y,anchor,txt){ return '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="'+
+      'var(--sans)" font-size="11" font-style="italic" fill="#000000">'+txt+'</text>'; }
+    return '<svg class="fieldsvg" id="cfield" viewBox="0 0 400 352" role="img" '+
+      'aria-label="A field with two axes. Across: how readily you reach for AI, from less to more. Up: how carefully you check it, from less to more. Set your own mark by pointer or arrow keys.">'
+      + '<rect x="'+X0+'" y="'+Y0+'" width="'+(X1-X0)+'" height="'+(Y1-Y0)+'" fill="#ffffff" stroke="#002060" stroke-opacity="0.35"/>'
+      + '<line x1="'+mx+'" y1="'+Y0+'" x2="'+mx+'" y2="'+Y1+'" stroke="#002060" stroke-opacity="0.35" stroke-dasharray="3 4"/>'
+      + '<line x1="'+X0+'" y1="'+my+'" x2="'+X1+'" y2="'+my+'" stroke="#002060" stroke-opacity="0.35" stroke-dasharray="3 4"/>'
+      + corner(X0+9,Y0+20,"start","checks carefully","reaches less")
+      + corner(X1-9,Y0+20,"end","reaches readily","checks carefully")
+      + corner(X1-9,Y1-26,"end","reaches readily","checks less")
+      + corner(X0+9,Y1-26,"start","both still","to build")
+      + '<line x1="'+X0+'" y1="'+Y1+'" x2="'+X1+'" y2="'+Y1+'" stroke="#002060" stroke-width="2"/>'
+      + '<line x1="'+X0+'" y1="'+Y1+'" x2="'+X0+'" y2="'+Y0+'" stroke="#002060" stroke-width="2"/>'
+      + '<polygon points="'+(X1-1)+','+(Y1-5)+' '+(X1+9)+','+Y1+' '+(X1-1)+','+(Y1+5)+'" fill="#002060"/>'
+      + '<polygon points="'+(X0-5)+','+(Y0+1)+' '+X0+','+(Y0-9)+' '+(X0+5)+','+(Y0+1)+'" fill="#002060"/>'
+      + tick(X0+2,Y1+16,"start","less")
+      + tick(X1,Y1+16,"end","more")
+      + tick(X0-8,Y1-2,"end","less")
+      + tick(X0-8,Y0+10,"end","more")
+      + '<text x="'+mx+'" y="338" text-anchor="middle" font-family="var(--mono)" font-size="13" font-weight="600" letter-spacing="1.2" fill="#002060">HOW READILY YOU REACH →</text>'
+      + '<text x="20" y="'+my+'" text-anchor="middle" font-family="var(--mono)" font-size="13" font-weight="600" letter-spacing="1.2" fill="#002060" transform="rotate(-90 20 '+my+')">HOW CAREFULLY YOU CHECK →</text>'
+      + '<g id="markg" style="display:none">'
+      +   '<circle id="markhalo" r="13" fill="#000000" fill-opacity="0.12"/>'
+      +   '<line id="mkh" stroke="#000000" stroke-width="1.5"/><line id="mkv" stroke="#000000" stroke-width="1.5"/>'
+      +   '<circle id="markdot" r="6.5" fill="#000000" stroke="#fff" stroke-width="2"/>'
+      + '</g>'
+      + '<rect id="hitarea" tabindex="0" role="button" aria-label="Your mark on the field. Use the arrow keys to place and move it." x="'+X0+'" y="'+Y0+'" width="'+(X1-X0)+'" height="'+(Y1-Y0)+'" fill="transparent" style="cursor:crosshair"/>'
+      + '</svg>';
+  }
+
+  function initField(){
+    var X0=64,X1=380,Y0=16,Y1=292, mx=(X0+X1)/2, my=(Y0+Y1)/2;
+    var svg=document.getElementById("cfield"), hit=document.getElementById("hitarea");
+    var g=document.getElementById("markg"), dot=document.getElementById("markdot"),
+        halo=document.getElementById("markhalo"), mkh=document.getElementById("mkh"), mkv=document.getElementById("mkv");
+    var wt=document.getElementById("watchtext");
+    var down=false, curX=null, curY=null;
+
+    function setMark(x, y){
+      curX=Math.max(X0,Math.min(X1,x)); curY=Math.max(Y0,Math.min(Y1,y));
+      dot.setAttribute("cx",curX); dot.setAttribute("cy",curY);
+      halo.setAttribute("cx",curX); halo.setAttribute("cy",curY);
+      mkh.setAttribute("x1",curX-11); mkh.setAttribute("x2",curX+11); mkh.setAttribute("y1",curY); mkh.setAttribute("y2",curY);
+      mkv.setAttribute("x1",curX); mkv.setAttribute("x2",curX); mkv.setAttribute("y1",curY-11); mkv.setAttribute("y2",curY+11);
+      g.style.display="block";
+      var right = curX>=mx, top = curY<my;
+      var q = top ? (right?"tr":"tl") : (right?"br":"bl");
+      wt.textContent = WATCH[q];
+    }
+    function place(clientX, clientY){
+      var pt=svg.createSVGPoint(); pt.x=clientX; pt.y=clientY;
+      var loc=pt.matrixTransform(svg.getScreenCTM().inverse());
+      setMark(loc.x, loc.y);
+    }
+    function ev(e){ var t=e.touches?e.touches[0]:e; place(t.clientX, t.clientY); }
+
+    hit.addEventListener("pointerdown", function(e){ down=true; hit.setPointerCapture(e.pointerId); ev(e); e.preventDefault(); });
+    hit.addEventListener("pointermove", function(e){ if(down) ev(e); });
+    hit.addEventListener("pointerup", function(){ down=false; });
+    hit.addEventListener("pointercancel", function(){ down=false; });
+
+    hit.addEventListener("keydown", function(e){
+      var k = e.key;
+      if(k !== "Enter" && k !== " " && k.indexOf("Arrow") !== 0) return;
+      e.preventDefault();
+      var step = e.shiftKey ? 20 : 8;
+      if(curX === null){ setMark(mx, my); return; }
+      if(k === "ArrowLeft") setMark(curX - step, curY);
+      else if(k === "ArrowRight") setMark(curX + step, curY);
+      else if(k === "ArrowUp") setMark(curX, curY - step);
+      else if(k === "ArrowDown") setMark(curX, curY + step);
+    });
+  }
+
+  function retake(){
+    form.reset();
+    var box=document.getElementById("results");
+    box.classList.remove("show"); box.innerHTML="";
+    form.querySelectorAll(".item.miss").forEach(function(el){el.classList.remove("miss");});
+    document.getElementById("hint").classList.remove("show");
+    updateProgress();
+    document.querySelector("header").scrollIntoView({behavior:"smooth"});
+  }
+
+  document.getElementById("scoreBtn").addEventListener("click", score);
+  updateProgress();
+})();
+</script>
+</body>
+</html>
