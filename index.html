@@ -49,15 +49,11 @@
 
   /* ---------- parts & items ---------- */
   .part{margin:44px 0 6px}
-  .part-num{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--slate2)}
+  .part-num{font-family:var(--mono);font-size:13.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--slate2)}
   .part h2{font-family:var(--serif);font-weight:600;font-size:26px;margin:5px 0 6px;color:var(--slate)}
   .part p.intro{margin:0 0 6px;color:var(--muted);font-size:14.5px;max-width:60ch}
-  .scalekey{font-family:var(--mono);font-size:11.5px;color:var(--slate);background:var(--slate-bg);
+  .scalekey{font-family:var(--mono);font-size:13.5px;color:#000000;background:var(--slate-bg);
     display:inline-block;padding:5px 12px;border-radius:999px;margin-top:12px;letter-spacing:.02em}
-  .kbdtip{font-family:var(--sans);font-size:12.5px;color:var(--muted);margin-top:10px}
-  .kbdtip b{color:var(--slate)}
-  .scalenote{display:inline-block;margin-top:10px;font-family:var(--sans);font-size:13px;font-weight:700;
-    color:var(--slate);background:var(--slate-bg);border:1px solid var(--slate);border-radius:8px;padding:7px 12px}
   .factor{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.03em;color:var(--slate);
     margin:30px 0 2px;text-transform:uppercase;display:flex;align-items:baseline;gap:8px}
   .factor span{font-weight:400;text-transform:none;color:var(--muted);letter-spacing:0;font-size:13px}
@@ -179,7 +175,6 @@
     .opts .box{height:44px;font-size:13px;border-radius:7px}
     .opts-usage{gap:8px}
     .opts-usage .box{height:auto;min-height:44px;font-size:13px}
-    .kbdtip{display:none}
     .btn-skip{font-size:12px;padding:9px 10px}
   }
   @media (max-width:380px){
@@ -227,7 +222,6 @@
       <h2>Your attitude toward AI</h2>
       <p class="intro">How much do you agree with each statement? “AI” here means technology that can sense, learn, and act in human-like ways, whether in software, online tools, or devices.</p>
       <div class="scalekey">1 = strongly disagree&nbsp;&nbsp;·&nbsp;&nbsp;5 = strongly agree</div>
-      <div class="kbdtip">Keyboard tip: press <b>1</b> to <b>5</b> (or <b>1</b> to <b>7</b> in Part 2) to rate a statement and jump to the next.</div>
     </div>
     <div id="attari"></div>
 
@@ -236,7 +230,6 @@
       <h2>Working and judging with AI</h2>
       <p class="intro">These are about your own competence with AI, understanding how it works, judging it critically, and putting it to use. Rate how true each is for you.</p>
       <div class="scalekey">1 = strongly disagree&nbsp;&nbsp;·&nbsp;&nbsp;7 = strongly agree</div>
-      <div class="scalenote">Note: the scale changes here. This part runs 1 to 7 (Part 1 used 1 to 5).</div>
     </div>
     <div id="snail"></div>
 
@@ -329,7 +322,7 @@
   /* behavioural guidance keyed to a self-placed region: no identity labels, no praise */
   var WATCH = {
     tr:"Reaching readily and checking carefully: the pairing good AI use depends on. The risk to watch: the checking habit is easiest to drop exactly when the output looks most polished, so keep it deliberate on high-stakes work.",
-    tl:"Careful and critical, with lighter reach. The risk to watch: under-use, with real time savings left on the table. Pick one low-stakes, high-frequency task and let AI take a first pass; you already have the judgement to catch what it gets wrong.",
+    tl:"Careful and critical, with lighter reach. The risk to watch: under-use, with real time savings left on the table. Pick one low-stakes, high-frequency task and let AI take a first pass; you already have the judgment to catch what it gets wrong.",
     br:"Quick to adopt, with appraisal still catching up. The risk to watch: over-trust. Make “show me the source” and a check of names, figures and citations a standing reflex; it is the habit today's session focuses on most.",
     bl:"Not yet leaned in: a reasonable place to begin, and the session is built for it. The risk to watch: staying on the sidelines. Aim for one concrete win: one recurring task, tried once, result checked."
   };
@@ -503,6 +496,11 @@
     var caB = bandOf(pct(r.ca,7)), paB = bandOf(pct(r.pa,7)), optB = bandOf(pct(r.optimism,5));
     var usageTxt = (r.usage===null) ? "not answered" : USAGE[r.usage];
 
+    /* computed placement: reach = equal-weight mean of optimism, practical application, and current use (each 0-100, use skipped if unanswered); check = critical appraisal (0-100) */
+    var reachParts = [pct(r.optimism,5), pct(r.pa,7)];
+    if(r.usage !== null) reachParts.push(r.usage/4*100);
+    var reach = mean(reachParts), check = pct(r.ca,7);
+
     var html = ""
     + '<div class="r-caveat"><p><b>How to read this.</b> Both readings come from validated scales: the ATTARI-12 (attitudes) and the SNAIL (AI literacy). They describe where you lean today, in ranges, not a fixed type. Because this is one person, everything sits against the scale midpoint, so treat it as a prompt for reflection, not a verdict.</p>'
     + '<p>And remember it measures <b>self-rated</b> understanding.</p></div>'
@@ -528,40 +526,42 @@
     +     '<span class="chip mid">'+usageTxt+'</span></div></div>'
     + '</div>'
 
-    /* --- two habits --- */
-    + '<div class="card">'
-    +   '<h3>The two habits that matter</h3>'
-    +   '<p class="sub">Good AI use rests on two habits working together. Most misuse is one running ahead of the other.</p>'
-    +   '<div class="habits">'
-    +     '<div class="habit"><div class="h">Reaching for it</div><p>How readily you put AI to real work: drafting, summarising, first-pass research. Momentum.</p></div>'
-    +     '<div class="habit"><div class="h">Checking it</div><p>How rigorously you test what it returns: its limits, its risks, and whether the names, figures and citations are real. Judgement.</p></div>'
-    +   '</div>'
-    +   '<div class="modes"><b>Two ways it goes wrong.</b> Reaching without checking is <b>over-trust</b>: fluent output taken on faith, the failure that matters most in legal and compliance work. Checking without reaching is <b>under-use</b>: sound judgement leaving real time savings on the table.</div>'
-    + '</div>'
-
-    /* --- self-placement --- */
+    /* --- self-placement (computed, adjustable) --- */
     + '<div class="card">'
     +   '<h3>Where do you sit?</h3>'
-    +   '<p class="sub">There is no computed answer here; this one is yours to set. Weigh your ratings, then place your own mark. You\'ll come back to this together in the session.</p>'
+    +   '<p class="sub">Your mark has been placed for you from your ratings. If it feels off, adjust it: the spot is yours to set. You\'ll come back to this together in the session.</p>'
     +   '<div class="fieldwrap">'
     +     '<div>'+ fieldSVG() +
-             '<p class="fieldnote"><b>Tap, drag, or focus the field and use the arrow keys</b> to set your mark. Across = how readily you reach; up = how carefully you check.</p>'
+             '<p class="fieldnote"><b>Tap, drag, or focus the field and use the arrow keys</b> to adjust your mark. Across = how readily you reach; up = how carefully you check.</p>'
     +       '<div class="watch"><div class="wh">The risk to watch there</div><p id="watchtext" aria-live="polite">Set your mark to see the habit worth minding for that spot.</p></div>'
     +     '</div>'
     +     '<div class="field-side">'
-    +       '<div class="inputs"><h4>Your inputs to weigh</h4>'
+    +       '<div class="inputs"><h4>How your spot was set</h4>'
     +         '<div class="inrow"><span>Optimism</span><b>'+WORDS.optimism[optB]+'</b></div>'
     +         '<div class="inrow"><span>Practical application</span><b>'+WORDS.lit[paB]+'</b></div>'
     +         '<div class="inrow"><span>Current use</span><b>'+usageTxt.split(" (")[0]+'</b></div>'
-    +         '<p class="feeds">↑ these three feed <em>reaching</em>.</p>'
+    +         '<p class="feeds">'+(r.usage===null ? '↑ the two answered inputs set <em>reaching</em>, weighted equally.' : '↑ these three set <em>reaching</em>, weighted equally.')+'</p>'
     +         '<div class="inrow" style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px"><span>Critical-appraisal literacy</span><b>'+WORDS.lit[caB]+'</b></div>'
-    +         '<p class="feeds">↑ this feeds <em>checking</em>.</p>'
+    +         '<p class="feeds">↑ this sets <em>checking</em>.</p>'
     +       '</div>'
     +     '</div>'
     +   '</div>'
-    +   '<div class="endbtns">'
-    +     '<button type="button" class="btn-ghost" id="retake">Start over</button>'
+    + '</div>'
+
+    /* --- two habits --- */
+    + '<div class="card">'
+    +   '<h3>The two habits that matter</h3>'
+    +   '<p class="sub" style="max-width:none">Good AI use rests on two habits working together. Most misuse is one running ahead of the other.</p>'
+    +   '<div class="habits">'
+    +     '<div class="habit"><div class="h">Reaching for it</div><p>How readily you put AI to real work: drafting, summarising, first-pass research. Momentum.</p></div>'
+    +     '<div class="habit"><div class="h">Checking it</div><p>How rigorously you test what it returns: its limits, its risks, and whether the names, figures and citations are real. Judgment.</p></div>'
     +   '</div>'
+    +   '<div class="modes"><b>Two ways it goes wrong.</b> Reaching without checking is <b>over-trust</b>: fluent output taken on faith, the failure that matters most in legal and compliance work. Checking without reaching is <b>under-use</b>: sound judgment leaving real time savings on the table.</div>'
+    + '</div>'
+
+    /* --- start over --- */
+    + '<div class="endbtns">'
+    +   '<button type="button" class="btn-ghost" id="retake">Start over</button>'
     + '</div>';
 
     var box = document.getElementById("results");
@@ -572,7 +572,7 @@
       box.querySelectorAll(".mtrack .mk").forEach(function(el){ el.style.left = el.dataset.l+"%"; });
     });});
 
-    initField();
+    initField(reach, check);
     document.getElementById("retake").addEventListener("click", retake);
     box.scrollIntoView({behavior:"smooth", block:"start"});
   }
@@ -585,7 +585,7 @@
     function tick(x,y,anchor,txt){ return '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="'+
       'var(--sans)" font-size="11" font-style="italic" fill="#000000">'+txt+'</text>'; }
     return '<svg class="fieldsvg" id="cfield" viewBox="0 0 400 352" role="img" '+
-      'aria-label="A field with two axes. Across: how readily you reach for AI, from less to more. Up: how carefully you check it, from less to more. Set your own mark by pointer or arrow keys.">'
+      'aria-label="A field with two axes. Across: how readily you reach for AI, from less to more. Up: how carefully you check it, from less to more. Your mark is placed from your ratings; adjust it by pointer or arrow keys.">'
       + '<rect x="'+X0+'" y="'+Y0+'" width="'+(X1-X0)+'" height="'+(Y1-Y0)+'" fill="#ffffff" stroke="#002060" stroke-opacity="0.35"/>'
       + '<line x1="'+mx+'" y1="'+Y0+'" x2="'+mx+'" y2="'+Y1+'" stroke="#002060" stroke-opacity="0.35" stroke-dasharray="3 4"/>'
       + '<line x1="'+X0+'" y1="'+my+'" x2="'+X1+'" y2="'+my+'" stroke="#002060" stroke-opacity="0.35" stroke-dasharray="3 4"/>'
@@ -608,11 +608,11 @@
       +   '<line id="mkh" stroke="#000000" stroke-width="1.5"/><line id="mkv" stroke="#000000" stroke-width="1.5"/>'
       +   '<circle id="markdot" r="6.5" fill="#000000" stroke="#fff" stroke-width="2"/>'
       + '</g>'
-      + '<rect id="hitarea" tabindex="0" role="button" aria-label="Your mark on the field. Use the arrow keys to place and move it." x="'+X0+'" y="'+Y0+'" width="'+(X1-X0)+'" height="'+(Y1-Y0)+'" fill="transparent" style="cursor:crosshair"/>'
+      + '<rect id="hitarea" tabindex="0" role="button" aria-label="Your mark on the field. Use the arrow keys to adjust it." x="'+X0+'" y="'+Y0+'" width="'+(X1-X0)+'" height="'+(Y1-Y0)+'" fill="transparent" style="cursor:crosshair"/>'
       + '</svg>';
   }
 
-  function initField(){
+  function initField(reach, check){
     var X0=64,X1=380,Y0=16,Y1=292, mx=(X0+X1)/2, my=(Y0+Y1)/2;
     var svg=document.getElementById("cfield"), hit=document.getElementById("hitarea");
     var g=document.getElementById("markg"), dot=document.getElementById("markdot"),
@@ -627,9 +627,11 @@
       mkh.setAttribute("x1",curX-11); mkh.setAttribute("x2",curX+11); mkh.setAttribute("y1",curY); mkh.setAttribute("y2",curY);
       mkv.setAttribute("x1",curX); mkv.setAttribute("x2",curX); mkv.setAttribute("y1",curY-11); mkv.setAttribute("y2",curY+11);
       g.style.display="block";
-      var right = curX>=mx, top = curY<my;
+      var right = curX>=mx, top = curY<=my;
       var q = top ? (right?"tr":"tl") : (right?"br":"bl");
-      wt.textContent = WATCH[q];
+      var px = (curX-X0)/(X1-X0)*100, py = (Y1-curY)/(Y1-Y0)*100;
+      var nearLine = Math.abs(px-50) < 5 || Math.abs(py-50) < 5;
+      wt.textContent = WATCH[q] + (nearLine ? " You sit close to the line here, so read both messages." : "");
     }
     function place(clientX, clientY){
       var pt=svg.createSVGPoint(); pt.x=clientX; pt.y=clientY;
@@ -654,6 +656,8 @@
       else if(k === "ArrowUp") setMark(curX, curY - step);
       else if(k === "ArrowDown") setMark(curX, curY + step);
     });
+
+    setMark(X0 + reach/100*(X1-X0), Y1 - check/100*(Y1-Y0));
   }
 
   function retake(){
